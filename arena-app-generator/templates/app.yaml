@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     path: {{ $.Values.spec.dev.path }}
-    repoURL: {{ printf "%s-%d" $.Values.spec.baseRepoUrl (mod $i 10) }}
+    repoURL: {{ printf "%s-%d" $.Values.spec.baseRepoUrl ((mod $i 10)+1) }}
     targetRevision: HEAD
   destination:
     name: {{ $cluster.name }}
