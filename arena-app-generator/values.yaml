@@ -8,5 +8,5 @@ spec:
     path: prod
 clusters:
   - name: arena-10
-    devApp: 1
+    devApp: 11
     prodApp: 2

@@ -1,10 +1,11 @@
 {{- range .Values.clusters }}
   {{- $cluster := . }}
   {{- range $i, $e := until (int $cluster.devApp) }}
+    {{- $idx := add $i 1 }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-app-%d-%s" $cluster.name $i $.Values.spec.dev.suffix }}
+  name: {{ printf "%s-app-%d-%s" $cluster.name $idx $.Values.spec.dev.suffix }}
   labels:
     cf.load-test: "true"
   finalizers:
@@ -13,7 +14,7 @@ spec:
   project: default
   source:
     path: {{ $.Values.spec.dev.path }}
-    repoURL: {{ printf "%s-%d" $.Values.spec.baseRepoUrl ((mod $i 10)+1) }}
+    repoURL: {{ printf "%s-%d" $.Values.spec.baseRepoUrl (mod $idx 10) }}
     targetRevision: HEAD
   destination:
     name: {{ $cluster.name }}
@@ -35,10 +36,11 @@ spec:
 ---
   {{- end }}
   {{- range $i, $e := until (int $cluster.prodApp) }}
+    {{- $idx := add $i 1 }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-app-%d-%s" $cluster.name $i $.Values.spec.prod.suffix }}
+  name: {{ printf "%s-app-%d-%s" $cluster.name $idx $.Values.spec.prod.suffix }}
   labels:
     cf.load-test: "true"
   finalizers:
@@ -47,7 +49,7 @@ spec:
   project: default
   source:
     path: {{ $.Values.spec.prod.path }}
-    repoURL: {{ printf "%s-app-%d" $.Values.spec.baseRepoUrl (mod $i 10) }}
+    repoURL: {{ printf "%s-app-%d" $.Values.spec.baseRepoUrl (mod $idx 10) }}
     targetRevision: HEAD
   destination:
     name: {{ $cluster.name }}
