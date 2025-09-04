@@ -5,7 +5,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-app-%d-%s" $cluster.name $idx $.Values.spec.dev.suffix }}
+  name: {{ printf "%s-to-%s-app-%d-%s" $.Values.runtimeName $cluster.name $idx $.Values.spec.dev.suffix }}
   labels:
     cf.load-test: "true"
   finalizers:

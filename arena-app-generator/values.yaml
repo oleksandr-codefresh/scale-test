@@ -1,3 +1,4 @@
+runtimeName: 'arena-10'
 spec:
   baseRepoUrl: https://github.com/oleksandr-codefresh/argo-load-product
   dev:
@@ -7,6 +8,6 @@ spec:
     suffix: prod
     path: prod
 clusters:
-  - name: arena-10
-    devApp: 11
+  - name: arena-11
+    devApp: 1
     prodApp: 2
