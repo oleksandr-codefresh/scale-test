@@ -1,3 +1,12 @@
+spec:
+  baseRepoUrl: https://github.com/oleksandr-codefresh/argo-load-product
+  dev:
+    suffix: dev
+    path: dev
+  prod:
+    suffix: prod
+    path: prod
 clusters:
   - name: arena-10
-    appAmount: 10
+    devApp: 1
+    prodApp: 2

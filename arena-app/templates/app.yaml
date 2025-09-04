@@ -1,9 +1,10 @@
+{{- range .Values.clusters }}
+  {{- $cluster := . }}
+  {{- range $i, $e := until (int $cluster.devApp) }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dev-{{ .Values.spec.product }}-{{ .Values.spec.service }}-app-1
-  annotations:
-    "codefresh.io/product": {{ .Values.spec.product }}
+  name: {{ printf "%s-app-%d-%s" $cluster.name $i $.Values.spec.dev.suffix }}
   labels:
     cf.load-test: "true"
   finalizers:
@@ -11,12 +12,12 @@ metadata:
 spec:
   project: default
   source:
-    path: {{ .Values.spec.dev.path }}
-    repoURL: {{ .Values.spec.dev.repoUrl }}
+    path: {{ $.Values.spec.dev.path }}
+    repoURL: {{ printf "%s-app-%d" $.Values.spec.baseRepoUrl (mod $i 10) }}
     targetRevision: HEAD
   destination:
-    name: {{ .Values.spec.dev.cluster }}
-    namespace: {{ .Values.spec.product }}-{{ .Values.spec.service }}
+    name: {{ $cluster.name }}
+    namespace: scale-test
   syncPolicy:
     automated:
       prune: true
@@ -31,3 +32,40 @@ spec:
       - ApplyOutOfSyncOnly=false
       - ServerSideApply=false
       - RespectIgnoreDifferences=false
+---
+  {{- end }}
+  {{- range $i, $e := until (int $cluster.prodApp) }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ printf "%s-app-%d-%s" $cluster.name $i $.Values.spec.prod.suffix }}
+  labels:
+    cf.load-test: "true"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: default
+  source:
+    path: {{ $.Values.spec.prod.path }}
+    repoURL: {{ printf "%s-app-%d" $.Values.spec.baseRepoUrl (mod $i 10) }}
+    targetRevision: HEAD
+  destination:
+    name: {{ $cluster.name }}
+    namespace: scale-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+      - Replace=false
+      - PruneLast=false
+      - Validate=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=false
+      - ServerSideApply=false
+      - RespectIgnoreDifferences=false
+---
+  {{- end }}
+{{- end }}
