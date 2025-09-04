@@ -22,7 +22,7 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true
+      # selfHeal: true
       allowEmpty: true
     syncOptions:
       - PrunePropagationPolicy=foreground
@@ -57,7 +57,7 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true
+      # selfHeal: true
       allowEmpty: true
     syncOptions:
       - PrunePropagationPolicy=foreground
