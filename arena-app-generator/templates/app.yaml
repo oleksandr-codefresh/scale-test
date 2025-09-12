@@ -49,7 +49,7 @@ spec:
   project: default
   source:
     path: {{ $.Values.spec.prod.path }}
-    repoURL: {{ printf "%s-app-%d" $.Values.spec.baseRepoUrl (mod $idx 10) }}
+    repoURL: {{ printf "%s-%d" $.Values.spec.baseRepoUrl (mod $idx 10) }}
     targetRevision: HEAD
   destination:
     name: {{ $cluster.name }}
